@@ -4,22 +4,42 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 	<link rel="stylesheet" href="css/main.css">
-	<style>
-		img{
-			width: 500px;
-			height: 500px;
-		}
-	</style>
+	<style media="screen">
+	    .choice {
+	      float: left;
+	      margin: 1em;
+	    }
+	    img {
+	      cursor: pointer;
+	      width: 200px;
+	      border: 2px solid white;
+	    }
+	    img:hover {
+	      border: 2px solid #f00;
+	    }
+  	</style>
 </head>
 <body>
 	<h1>TEST</h1>
 
-	<input type="text">
-	<button>Entrer</button>
+	<!--<input type="text">
+	<button>Entrer</button>-->
 
-	<img src="https://wiki.jvflux.com/images/thumb/4/47/Lamasticot.PNG/300px-Lamasticot.PNG" alt="lamasticot">
+	<!--<img src="https://wiki.jvflux.com/images/thumb/4/47/Lamasticot.PNG/300px-Lamasticot.PNG" alt="lamasticot">
 
-	<img src="http://reachingutopia.com/wp-content/uploads/2013/01/troll.png" alt="troll">
+	<img src="http://reachingutopia.com/wp-content/uploads/2013/01/troll.png" alt="troll">-->
+
+
+	<div class="choice left">
+		<img>
+	    <div class="caption"></div>
+	    <div class="total"></div>
+	</div>
+	<div class="choice right">
+	   <img>
+	   <div class="caption"></div>
+	   <div class="total"></div>
+	</div>
 
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.js">
@@ -27,18 +47,45 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
+		
 		var socket = io();
-		window.addEventListener('load', function(){
-			var choices = document.querySelectorAll('img');
-			for (var i = 0; i < choices.length; i++){
-				choices[i].addEventListener('mouseover', function(){
-					var what = this.getAttribute('alt');
-					console.log(what);
-					socket.emit('choice', what);
-				});
-			};
+		$(function () {
+		  // detect mouse overs
+		  $('.choice').on('mouseover', function () {
+		    var what = 'left';
+		    if($(this).hasClass('right')) {
+		      what = 'right';
+		    }
+		    // tell the server
+		    socket.emit('choice', what);
+		  });
+		  $('.choice').on('mouseout', function () {
+		    var what = 'left';
+		    if($(this).hasClass('right')) {
+		      what = 'right';
+		    }
+		    // tell the server
+		    socket.emit('unchoice', what);
+		  });
+		});
+		// update total
+		socket.on('total', function (votes) {
+		  $(".left .total").html(votes.left.total);
+		  $(".right .total").html(votes.right.total);
+		});
+		// update the whole vote
+		socket.on('votes', function (votes) {
+		  $(".left img").prop('src', votes.left.src);
+		  $(".left .caption").html(votes.left.name);
+		  $(".right img").prop('src', votes.right.src);
+		  $(".right .caption").html(votes.right.name);
 		});
 	</script>
+
+	
+
+
+
 
 	<!-- AFFICHER TEXTE ECRIT<script>
 		var socket = io();
