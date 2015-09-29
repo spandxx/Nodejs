@@ -1,10 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<link rel="stylesheet" href="css/main.css">
+	<style>
+		img{
+			width: 500px;
+			height: 500px;
+		}
+	</style>
 </head>
 <body>
 	<h1>TEST</h1>
+
+	<input type="text">
+	<button>Entrer</button>
+
+	<img src="https://wiki.jvflux.com/images/thumb/4/47/Lamasticot.PNG/300px-Lamasticot.PNG" alt="lamasticot">
+
+	<img src="http://reachingutopia.com/wp-content/uploads/2013/01/troll.png" alt="troll">
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.js">
+	</script>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io();
+		window.addEventListener('load', function(){
+			var choices = document.querySelectorAll('img');
+			for (var i = 0; i < choices.length; i++){
+				choices[i].addEventListener('mouseover', function(){
+					var what = this.getAttribute('alt');
+					console.log(what);
+					socket.emit('choice', what);
+				});
+			};
+		});
+	</script>
+
+	<!-- AFFICHER TEXTE ECRIT<script>
+		var socket = io();
+
+		$('button').click(function(){
+			var text = $('input').val();
+			socket.emit('choice', text);
+		});
+	</script>-->
+
+	<!-- AFFICHER AU CLIC IMAGES<script>
+		$('img').click(function(){
+        var monchoix = $(this).attr("alt");
+        socket.emit('choice', monchoix);
+    });
+	</script>-->
+
 </body>
 </html>
